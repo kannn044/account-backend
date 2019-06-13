@@ -27,7 +27,7 @@ router.post('/', async (req: Request, res: Response) => {
     if (rs.length) {
 
       let payload = {
-        fullname: `${rs[0].first_name} ${rs[0].last_name}`,
+        fullname: `${rs[0].title_name}${rs[0].fname} ${rs[0].lname}`,
         id: rs[0].user_id,
         type: rs[0].type
       }
