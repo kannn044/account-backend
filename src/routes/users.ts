@@ -63,8 +63,7 @@ router.get('/positions', async (req: Request, res: Response) => {
 
 router.post('/', async (req: Request, res: Response) => {
   let db = req.db;
-  let first_name = req.body.first_name;
-  let last_name = req.body.last_name;
+  let people_id = req.body.people_id;
   let username = req.body.username;
   let password = req.body.password;
   let type = req.body.type;
@@ -78,8 +77,7 @@ router.post('/', async (req: Request, res: Response) => {
       res.send({ ok: false });
     } else {
       const obj = {
-        first_name: first_name,
-        last_name: last_name,
+        people_id: people_id,
         username: username,
         password: password,
         type: type
@@ -131,8 +129,6 @@ router.post('/people', async (req: Request, res: Response) => {
 
 router.put('/', async (req: Request, res: Response) => {
   let db = req.db;
-  let first_name = req.body.first_name;
-  let last_name = req.body.last_name;
   let username = req.body.username;
   let password = req.body.password;
   let type = req.body.type;
@@ -142,8 +138,6 @@ router.put('/', async (req: Request, res: Response) => {
 
   try {
     const obj = {
-      first_name: first_name,
-      last_name: last_name,
       username: username,
       password: password,
       type: type
