@@ -118,9 +118,16 @@ router.post('/people', async (req: Request, res: Response) => {
   let db = req.db;
   let fname = req.body.fname;
   let lname = req.body.lname;
+  let position_id = req.body.position_id
+  let title_id = req.body.title_id;
 
   try {
-    await usersModel.savePeoples(db, { fname: fname, lname: lname });
+    await usersModel.savePeoples(db, {
+      fname: fname,
+      lname: lname,
+      position_id: position_id,
+      title_id: title_id
+    });
     res.send({ ok: true });
   } catch (error) {
     res.send({ ok: false, message: error });

@@ -4,7 +4,7 @@ export class UsersModel {
 
   getUsers(db: Knex) {
     return db('um_users as u')
-      .select('p.people_id','t.title_name', 'p.fname', 'p.lname', 'po.position_name', 'u.username', 'u.password', 'u.user_id', 'u.type')
+      .select('p.people_id', 't.title_name', 'p.fname', 'p.lname', 'po.position_name', 'u.username', 'u.password', 'u.user_id', 'u.type')
       .join('um_people as p', 'p.people_id', 'u.people_id')
       .join('um_positions as po', 'po.position_id', 'p.position_id')
       .join('um_titles as t', 't.title_id', 'p.title_id')
@@ -20,7 +20,9 @@ export class UsersModel {
   }
 
   getPeoples(db: Knex) {
-    return db('um_people');
+    return db('um_people as u')
+      .select('u.*', 'p.position_name')
+      .join('um_positions as p', 'p.position_id', 'u.position_id');
   }
 
   saveUsers(db: Knex, data: any) {
@@ -62,13 +64,13 @@ export class UsersModel {
   search(db: Knex, query: any) {
     let _query = `%` + query + `%`;
     return db(`um_people`)
-    .whereRaw(`fname LIKE '${_query}'`)
-    .orWhereRaw(`lname LIKE '${_query}'`);
+      .whereRaw(`fname LIKE '${_query}'`)
+      .orWhereRaw(`lname LIKE '${_query}'`);
   }
 
   searchPosition(db: Knex, query: any) {
     let _query = `%` + query + `%`;
     return db(`um_positions`)
-    .whereRaw(`position_name LIKE '${_query}'`);
+      .whereRaw(`position_name LIKE '${_query}'`);
   }
 }
