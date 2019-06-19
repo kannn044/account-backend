@@ -25,6 +25,20 @@ router.get('/', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/search/info', async (req: Request, res: Response) => {
+  let db = req.db;
+  let query = req.query.query;
+
+  try {
+    let rs: any = await usersModel.getUsersInfo(db, query);
+
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, message: error })
+  }
+});
+
+
 router.get('/peoples', async (req: Request, res: Response) => {
   let db = req.db;
 
@@ -228,4 +242,40 @@ router.get('/search/position', async (req: Request, res: Response) => {
   }
 });
 
+router.get('/salary', async (req: Request, res: Response) => {
+  let db = req.db;
+  let date = req.query.date;
+
+  try {
+    let rs = await usersModel.getSalary(db, date);
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, message: error })
+  }
+});
+
+router.get('/salary/search', async (req: Request, res: Response) => {
+  let db = req.db;
+  let date = req.query.date;
+  let query = req.query.query;
+
+  try {
+    let rs = await usersModel.getSalarySearch(db, date, query);
+    res.send({ ok: true, rows: rs });
+  } catch (error) {
+    res.send({ ok: false, message: error })
+  }
+});
+
+router.delete('/delete/salary', async (req: Request, res: Response) => {
+  let db = req.db;
+  let date = req.query.date;
+
+  try {
+    await usersModel.removeSalary(db, date);
+    res.send({ ok: true });
+  } catch (error) {
+    res.send({ ok: false, message: error })
+  }
+});
 export default router;

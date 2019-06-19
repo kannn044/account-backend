@@ -6,7 +6,6 @@ import * as path from 'path';
 import * as logger from 'morgan';
 import * as cookieParser from 'cookie-parser';
 import * as bodyParser from 'body-parser';
-import * as ejs from 'ejs';
 import * as HttpStatus from 'http-status-codes';
 import * as express from 'express';
 import * as cors from 'cors';
@@ -21,6 +20,7 @@ import loginRoute from './routes/login';
 import requestRoute from './routes/request';
 import usersRoute from './routes/users';
 import importRoute from './routes/import';
+import reportRoute from './routes/report';
 
 // Assign router to the express.Router() instance
 const app: express.Application = express();
@@ -29,14 +29,14 @@ const jwt = new Jwt();
 
 //view engine setup
 app.set('views', path.join(__dirname, '../views'));
-app.engine('.ejs', ejs.renderFile);
-app.set('view engine', 'ejs');
+// app.engine('.ejs', ejs.renderFile);
+app.set('view engine', 'pug');
 
 //uncomment after placing your favicon in /public
 //app.use(favicon(path.join(__dirname,'../public','favicon.ico')));
 app.use(logger('dev'));
 app.use(bodyParser.json({ limit: '5mb' }));
-app.use(bodyParser.urlencoded({ extended: false }));
+app.use(bodyParser.urlencoded({ extended: false, limit: '5mb' }));
 app.use(cookieParser());
 app.use(express.static(path.join(__dirname, '../public')));
 
@@ -100,6 +100,7 @@ app.use('/api', checkAuth, requestRoute);
 app.use('/', indexRoute);
 app.use('/users', checkAuth, usersRoute);
 app.use('/import', checkAuth, importRoute);
+app.use('/report', checkAuth, reportRoute);
 
 //error handlers
 

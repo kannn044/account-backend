@@ -11,6 +11,18 @@ export class UsersModel {
       .where('u.is_active', 'Y');
   }
 
+  getUsersInfo(db: Knex, query: any) {
+    let _query = `%` + query + `%`;
+    return db('um_users as u')
+      .select('p.people_id', 't.title_name', 'p.fname', 'p.lname', 'po.position_name', 'u.username', 'u.password', 'u.user_id', 'u.type')
+      .join('um_people as p', 'p.people_id', 'u.people_id')
+      .join('um_positions as po', 'po.position_id', 'p.position_id')
+      .join('um_titles as t', 't.title_id', 'p.title_id')
+      .where('u.is_active', 'Y')
+      .whereRaw(`fname LIKE '${_query}'`)
+      .orWhereRaw(`lname LIKE '${_query}'`);
+  }
+
   getTitles(db: Knex) {
     return db('um_titles');
   }
@@ -72,5 +84,31 @@ export class UsersModel {
     let _query = `%` + query + `%`;
     return db(`um_positions`)
       .whereRaw(`position_name LIKE '${_query}'`);
+  }
+
+  getSalary(db: Knex, date: any) {
+    let _date = `%` + date + `%`;
+    return db(`salary as s`)
+      .select('s.*', 'p.fname', 'p.lname')
+      .join(`um_people as p`, `p.people_id`, `s.people_id`)
+      .whereRaw(`s.date_serv LIKE '${_date}'`)
+  }
+
+  removeSalary(db: Knex, date: any) {
+    let _date = `%` + date + `%`;
+    return db(`salary`).del()
+      .whereRaw(`date_serv LIKE '${_date}'`)
+  }
+
+  getSalarySearch(db: Knex, date: any, query: any) {
+    let _date = `%` + date + `%`;
+    let _query = `%` + query + `%`;
+    return db(`salary as s`)
+      .select('s.*', 'p.fname', 'p.lname')
+      .join(`um_people as p`, `p.people_id`, `s.people_id`)
+      .whereRaw(`fname LIKE '${_query}'`)
+      .whereRaw(`s.date_serv LIKE '${_date}'`)
+      .orWhereRaw(`lname LIKE '${_query}'`)
+      .whereRaw(`s.date_serv LIKE '${_date}'`)
   }
 }
